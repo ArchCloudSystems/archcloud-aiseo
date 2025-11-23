@@ -4,13 +4,12 @@ import { db } from "@/lib/db";
 import { z } from "zod";
 import { getUserPlan } from "@/lib/plan-helper";
 import { getLimitsForPlan, checkLimit } from "@/lib/limits";
+import { fetchKeywordMetrics } from "@/lib/serp-api";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const createKeywordSchema = z.object({
   projectId: z.string().min(1),
-  term: z.string().min(1).max(200),
-  searchVolume: z.number().int().positive().optional(),
-  difficulty: z.number().int().min(0).max(100).optional(),
-  intent: z.string().optional(),
+  terms: z.array(z.string().min(1).max(200)).min(1).max(20),
 });
 
 export async function GET(request: Request) {
@@ -65,6 +64,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const rateLimit = checkRateLimit(session.user.id, "keywords", {
+      maxRequests: 10,
+      windowMs: 60 * 1000,
+    });
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded. Please try again later." },
+        { status: 429 }
+      );
+    }
+
     const body = await request.json();
     const validatedData = createKeywordSchema.parse(body);
 
@@ -87,8 +98,9 @@ export async function POST(request: Request) {
     const plan = await getUserPlan(session.user.id);
     const limits = getLimitsForPlan(plan);
 
+    const newTotalCount = project._count.keywords + validatedData.terms.length;
     const limitCheck = checkLimit(
-      project._count.keywords,
+      newTotalCount - 1,
       limits.maxKeywordsPerProject,
       "keywords per project"
     );
@@ -97,32 +109,38 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: limitCheck.reason,
-          current: limitCheck.current,
+          current: project._count.keywords,
           limit: limitCheck.limit,
         },
         { status: 403 }
       );
     }
 
-    const keyword = await db.keyword.create({
-      data: {
-        projectId: validatedData.projectId,
-        term: validatedData.term,
-        searchVolume: validatedData.searchVolume,
-        difficulty: validatedData.difficulty,
-        intent: validatedData.intent,
-      },
-      include: {
-        project: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+    const metrics = await fetchKeywordMetrics(validatedData.terms);
 
-    return NextResponse.json({ keyword }, { status: 201 });
+    const keywords = await Promise.all(
+      metrics.map((metric) =>
+        db.keyword.create({
+          data: {
+            projectId: validatedData.projectId,
+            term: metric.term,
+            searchVolume: metric.searchVolume,
+            difficulty: metric.difficulty,
+            intent: metric.intent,
+          },
+          include: {
+            project: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        })
+      )
+    );
+
+    return NextResponse.json({ keywords }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
