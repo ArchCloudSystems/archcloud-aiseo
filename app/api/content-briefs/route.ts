@@ -5,6 +5,8 @@ import { z } from "zod";
 import { getUserPlan } from "@/lib/plan-helper";
 import { getLimitsForPlan, checkLimit } from "@/lib/limits";
 import { generateContentBrief } from "@/lib/openai";
+import { getUserWorkspace } from "@/lib/workspace";
+import { getOrFallbackOpenAIKey } from "@/lib/integration-helper";
 
 const createBriefSchema = z.object({
   projectId: z.string().min(1),
@@ -22,9 +24,12 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId");
+    const workspace = await getUserWorkspace(session.user.id);
 
     const where: any = {
-      userId: session.user.id,
+      project: {
+        workspaceId: workspace.id,
+      },
     };
 
     if (projectId) {
@@ -66,13 +71,16 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validatedData = createBriefSchema.parse(body);
 
+    const workspace = await getUserWorkspace(session.user.id);
     const plan = await getUserPlan(session.user.id);
     const limits = getLimitsForPlan(plan);
 
     const briefCount = await db.contentBrief.count({
       where: {
-        userId: session.user.id,
         projectId: validatedData.projectId,
+        project: {
+          workspaceId: workspace.id,
+        },
       },
     });
 
@@ -93,23 +101,24 @@ export async function POST(request: Request) {
       );
     }
 
+    const openaiKey = await getOrFallbackOpenAIKey(workspace.id);
+
     const briefData = await generateContentBrief({
       targetKeyword: validatedData.targetKeyword,
       targetUrl: validatedData.targetUrl,
       notes: validatedData.notes,
       model: limits.openAIModel,
+      apiKey: openaiKey,
     });
 
     const brief = await db.contentBrief.create({
       data: {
-        userId: session.user.id,
         projectId: validatedData.projectId,
         targetKeyword: validatedData.targetKeyword,
-        targetUrl: validatedData.targetUrl || null,
-        title: briefData.title,
-        metaDescription: briefData.metaDescription,
+        searchIntent: "informational",
         outline: JSON.stringify(briefData.outline),
-        talkingPoints: JSON.stringify(briefData.talkingPoints),
+        questions: JSON.stringify(briefData.talkingPoints),
+        wordCountTarget: briefData.targetWordCount,
         notes: validatedData.notes,
       },
       include: {

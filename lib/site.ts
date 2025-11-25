@@ -20,7 +20,11 @@ export const siteConfig = {
 
   social: {
     github: "https://github.com/archcloudsystems",
-    twitter: "https://twitter.com/archcloud",
+    twitter: process.env.NEXT_PUBLIC_SOCIAL_TWITTER_URL || "https://twitter.com/archcloud",
+    linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN_URL,
+    instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM_URL,
+    facebook: process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK_URL,
+    youtube: process.env.NEXT_PUBLIC_SOCIAL_YOUTUBE_URL,
   },
 
   nav: {
@@ -59,8 +63,9 @@ export const siteConfig = {
       {
         title: "Legal",
         links: [
-          { label: "Privacy Policy", href: "/privacy" },
-          { label: "Terms of Service", href: "/terms" },
+          { label: "Privacy Policy", href: "/legal/privacy-policy" },
+          { label: "Cookie Policy", href: "/legal/cookie-policy" },
+          { label: "Terms of Service", href: "/legal/terms" },
         ]
       }
     ]

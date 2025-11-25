@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { z } from "zod";
 import { getUserPlan } from "@/lib/plan-helper";
 import { getLimitsForPlan, checkLimit } from "@/lib/limits";
+import { getUserWorkspace } from "@/lib/workspace";
 
 const createProjectSchema = z.object({
   name: z.string().min(1, "Project name is required").max(100),
@@ -17,9 +18,11 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const workspace = await getUserWorkspace(session.user.id);
+
     const projects = await db.project.findMany({
       where: {
-        ownerId: session.user.id,
+        workspaceId: workspace.id,
       },
       include: {
         _count: {
@@ -55,11 +58,12 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validatedData = createProjectSchema.parse(body);
 
+    const workspace = await getUserWorkspace(session.user.id);
     const plan = await getUserPlan(session.user.id);
     const limits = getLimitsForPlan(plan);
 
     const currentProjectCount = await db.project.count({
-      where: { ownerId: session.user.id },
+      where: { workspaceId: workspace.id },
     });
 
     const limitCheck = checkLimit(
@@ -83,8 +87,7 @@ export async function POST(request: Request) {
       data: {
         name: validatedData.name,
         domain: validatedData.domain || null,
-        ownerId: session.user.id,
-        plan,
+        workspaceId: workspace.id,
       },
     });
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
+import { getUserWorkspace } from "@/lib/workspace";
 
 export async function POST(req: Request) {
   try {
@@ -22,9 +23,10 @@ export async function POST(req: Request) {
     }
 
     const userId = session.user.id;
+    const workspace = await getUserWorkspace(userId);
 
     const subscription = await db.subscription.findFirst({
-      where: { userId },
+      where: { workspaceId: workspace.id },
     });
 
     if (!subscription?.stripeCustomerId) {

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { z } from "zod";
+import { getUserWorkspace } from "@/lib/workspace";
 
 const updateProjectSchema = z.object({
   name: z.string().min(1, "Project name is required").max(100).optional(),
@@ -19,11 +20,12 @@ export async function GET(
     }
 
     const { id } = await params;
+    const workspace = await getUserWorkspace(session.user.id);
 
     const project = await db.project.findFirst({
       where: {
         id: id,
-        ownerId: session.user.id,
+        workspaceId: workspace.id,
       },
       include: {
         _count: {
@@ -73,11 +75,12 @@ export async function PATCH(
     }
 
     const { id } = await params;
+    const workspace = await getUserWorkspace(session.user.id);
 
     const existingProject = await db.project.findFirst({
       where: {
         id: id,
-        ownerId: session.user.id,
+        workspaceId: workspace.id,
       },
     });
 
@@ -124,11 +127,12 @@ export async function DELETE(
     }
 
     const { id } = await params;
+    const workspace = await getUserWorkspace(session.user.id);
 
     const existingProject = await db.project.findFirst({
       where: {
         id: id,
-        ownerId: session.user.id,
+        workspaceId: workspace.id,
       },
     });
 

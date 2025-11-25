@@ -7,11 +7,13 @@ export type KeywordMetrics = {
 };
 
 export async function fetchKeywordMetrics(
-  keywords: string[]
+  keywords: string[],
+  apiKey?: string | null
 ): Promise<KeywordMetrics[]> {
-  const apiKey = process.env.SERP_API_KEY;
+  const effectiveApiKey = apiKey || process.env.SERPAPI_API_KEY;
 
-  if (!apiKey) {
+  if (!effectiveApiKey) {
+    console.warn("SERP API: No API key provided - returning null metrics");
     return keywords.map((term) => ({
       term,
       searchVolume: null,
@@ -28,7 +30,7 @@ export async function fetchKeywordMetrics(
           const url = new URL("https://serpapi.com/search");
           url.searchParams.set("engine", "google");
           url.searchParams.set("q", term);
-          url.searchParams.set("api_key", apiKey);
+          url.searchParams.set("api_key", effectiveApiKey);
           url.searchParams.set("gl", "us");
           url.searchParams.set("hl", "en");
 

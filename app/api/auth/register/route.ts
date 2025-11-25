@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { getOrCreateUserWorkspace } from "@/lib/workspace";
 
 const registerSchema = z.object({
   name: z.string().min(1),
@@ -32,6 +33,16 @@ export async function POST(req: Request) {
         name,
         email,
         passwordHash,
+      },
+    });
+
+    const workspace = await getOrCreateUserWorkspace(user.id);
+
+    await db.subscription.create({
+      data: {
+        workspaceId: workspace.id,
+        plan: "STARTER",
+        status: "active",
       },
     });
 

@@ -1,11 +1,25 @@
+import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+// Simple middleware that just lets requests through.
+// We are intentionally NOT using Auth.js or Prisma here
+// because Edge runtime cannot use Prisma Client.
 export function middleware(_req: NextRequest) {
-  // Temporarily disable auth – allow all requests through
-  return;
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [], // no protected routes for now
+  matcher: [
+    "/dashboard/:path*",
+    "/projects/:path*",
+    "/keywords/:path*",
+    "/audits/:path*",
+    "/content-briefs/:path*",
+    "/documents/:path*",
+    "/integrations/:path*",
+    "/billing/:path*",
+    "/settings/:path*",
+    "/admin/:path*",
+  ],
 };
 

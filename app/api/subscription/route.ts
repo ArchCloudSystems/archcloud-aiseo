@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getUserWorkspace } from "@/lib/workspace";
 
 export async function GET() {
   try {
@@ -14,17 +15,18 @@ export async function GET() {
     }
 
     const userId = session.user.id;
+    const workspace = await getUserWorkspace(userId);
 
     let subscription = await db.subscription.findFirst({
-      where: { userId },
+      where: { workspaceId: workspace.id },
     });
 
     if (!subscription) {
       subscription = await db.subscription.create({
         data: {
-          userId,
-          plan: "FREE",
-          status: "inactive",
+          workspaceId: workspace.id,
+          plan: "STARTER",
+          status: "active",
         },
       });
     }

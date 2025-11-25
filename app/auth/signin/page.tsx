@@ -1,19 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 
-export default function SignInPage() {
+const ERROR_MESSAGES: Record<string, string> = {
+  Signin: "There was a problem signing in. Please try again.",
+  OAuthSignin: "There was a problem connecting to Google. Please try again.",
+  OAuthCallback: "There was a problem with the Google callback. Please try again.",
+  OAuthCreateAccount: "Could not create an account. The email may already be in use.",
+  EmailCreateAccount: "Could not create an account with this email.",
+  Callback: "There was a problem with the callback. Please try again.",
+  OAuthAccountNotLinked: "This email is already associated with another account. Please sign in with your original method.",
+  EmailSignin: "Check your email for a sign-in link.",
+  CredentialsSignin: "Invalid email or password. Please check your credentials and try again.",
+  default: "Unable to sign in. Please try again or contact support.",
+};
+
+function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam) {
+      setError(ERROR_MESSAGES[errorParam] || ERROR_MESSAGES.default);
+    }
+  }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,8 +53,8 @@ export default function SignInPage() {
       });
 
       if (result?.error) {
-        setError("Invalid email or password");
-      } else {
+        setError(ERROR_MESSAGES[result.error] || ERROR_MESSAGES.CredentialsSignin);
+      } else if (result?.ok) {
         router.push("/dashboard");
         router.refresh();
       }
@@ -45,8 +66,14 @@ export default function SignInPage() {
   }
 
   async function handleGoogleSignIn() {
-    setLoading(true);
-    await signIn("google", { callbackUrl: "/dashboard" });
+    try {
+      setLoading(true);
+      setError(null);
+      await signIn("google", { callbackUrl: "/dashboard" });
+    } catch (err) {
+      setError("Failed to initiate Google sign-in. Please try again.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -140,5 +167,17 @@ export default function SignInPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">Loading...</div>
+      </div>
+    }>
+      <SignInForm />
+    </Suspense>
   );
 }

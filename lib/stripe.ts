@@ -9,15 +9,20 @@ export const stripe = process.env.STRIPE_SECRET_KEY
   : null;
 
 export const STRIPE_PLANS = {
+  STARTER: {
+    priceId: process.env.STRIPE_PRICE_STARTER!,
+    name: "Starter",
+    description: "Perfect for individuals and small projects.",
+  },
   PRO: {
-    priceId: process.env.STRIPE_PRO_MONTHLY_PRICE_ID!,
+    priceId: process.env.STRIPE_PRICE_PRO!,
     name: "Pro",
-    description: "For solo founders and small teams running multiple sites.",
+    description: "For professionals and growing teams.",
   },
   AGENCY: {
-    priceId: process.env.STRIPE_AGENCY_MONTHLY_PRICE_ID!,
+    priceId: process.env.STRIPE_PRICE_AGENCY!,
     name: "Agency",
-    description: "For agencies managing many clients with higher limits.",
+    description: "For agencies managing many clients.",
   },
 } as const;
 
@@ -41,46 +46,47 @@ export type PlanDefinition = {
 };
 
 export const planDefinitions: Record<PlanTier, PlanDefinition> = {
-  FREE: {
-    tier: "FREE",
-    name: "Free",
-    description: "Perfect for testing and small projects",
-    monthlyPriceDisplay: 0,
+  STARTER: {
+    tier: "STARTER",
+    name: "Starter",
+    description: "Perfect for individuals and small projects",
+    monthlyPriceDisplay: 49,
+    stripePriceId: process.env.STRIPE_PRICE_STARTER,
     features: [
-      "2 projects",
-      "10 keywords per project",
-      "3 content briefs per project",
-      "3 SEO audits per week",
+      "3 projects",
+      "500 keyword searches/month",
+      "50 AI content briefs",
+      "50 SEO audits/month",
       "Basic reporting",
     ],
     limits: {
-      projects: 2,
-      keywordsPerProject: 10,
-      briefs: "3 per project",
-      auditsPerWeek: 3,
+      projects: 3,
+      keywordsPerProject: 500,
+      briefs: 50,
+      auditsPerWeek: 50,
       integrations: false,
     },
   },
   PRO: {
     tier: "PRO",
     name: "Pro",
-    description: "For serious SEO professionals",
-    monthlyPriceDisplay: 39,
-    stripePriceId: process.env.STRIPE_PRO_PRICE_ID,
+    description: "For professionals and growing teams",
+    monthlyPriceDisplay: 149,
+    stripePriceId: process.env.STRIPE_PRICE_PRO,
     features: [
       "10 projects",
-      "100 keywords per project",
-      "20 content briefs per project",
-      "10 SEO audits per week",
+      "2,000 keyword searches/month",
+      "200 AI content briefs",
+      "200 SEO audits/month",
       "Advanced reporting",
       "API integrations",
       "Priority support",
     ],
     limits: {
       projects: 10,
-      keywordsPerProject: 100,
-      briefs: "20 per project",
-      auditsPerWeek: 10,
+      keywordsPerProject: 2000,
+      briefs: 200,
+      auditsPerWeek: 200,
       integrations: true,
     },
   },
@@ -88,12 +94,12 @@ export const planDefinitions: Record<PlanTier, PlanDefinition> = {
     tier: "AGENCY",
     name: "Agency",
     description: "For agencies managing multiple clients",
-    monthlyPriceDisplay: 149,
-    stripePriceId: process.env.STRIPE_AGENCY_PRICE_ID,
+    monthlyPriceDisplay: 399,
+    stripePriceId: process.env.STRIPE_PRICE_AGENCY,
     features: [
       "Unlimited projects",
-      "Unlimited keywords",
-      "Unlimited content briefs",
+      "Unlimited keyword searches",
+      "Unlimited AI content briefs",
       "Unlimited SEO audits",
       "Custom reporting",
       "Multiple integrations",
@@ -113,17 +119,21 @@ export const planDefinitions: Record<PlanTier, PlanDefinition> = {
 export function getPlanFromPriceId(
   priceId: string | null | undefined
 ): PlanTier {
-  if (!priceId) return "FREE";
+  if (!priceId) return "STARTER";
 
-  if (priceId === process.env.STRIPE_PRO_PRICE_ID) {
+  if (priceId === process.env.STRIPE_PRICE_STARTER) {
+    return "STARTER";
+  }
+
+  if (priceId === process.env.STRIPE_PRICE_PRO) {
     return "PRO";
   }
 
-  if (priceId === process.env.STRIPE_AGENCY_PRICE_ID) {
+  if (priceId === process.env.STRIPE_PRICE_AGENCY) {
     return "AGENCY";
   }
 
-  return "FREE";
+  return "STARTER";
 }
 
 export function getPlanDefinition(tier: PlanTier): PlanDefinition {

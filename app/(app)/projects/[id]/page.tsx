@@ -1,22 +1,25 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getUserWorkspace } from "@/lib/workspace";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ShareButtons } from "@/components/share-buttons";
 import { ArrowLeft, BarChart3, FileText, Search } from "lucide-react";
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   const userId = session!.user.id;
+  const workspace = await getUserWorkspace(userId);
 
   const { id } = await params;
 
   const project = await db.project.findFirst({
     where: {
       id: id,
-      ownerId: userId,
+      workspaceId: workspace.id,
     },
     include: {
       _count: {
@@ -63,9 +66,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <h1 className="text-3xl font-bold">{project.name}</h1>
           <p className="text-muted-foreground">{project.domain || "No domain set"}</p>
         </div>
-        <span className="inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold">
-          {project.plan}
-        </span>
+        <ShareButtons title={`Check out my SEO project: ${project.name}`} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -133,10 +134,6 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                     <span className="text-muted-foreground">Content briefs generated:</span>
                     <span className="font-medium">{project._count.contentBriefs}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Plan tier:</span>
-                    <span className="font-medium">{project.plan}</span>
-                  </div>
                 </div>
               </div>
             </CardContent>
@@ -163,13 +160,13 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                     <div key={keyword.id} className="flex items-center justify-between border-b pb-3 last:border-0">
                       <div>
                         <p className="font-medium">{keyword.term}</p>
-                        {keyword.intent && (
-                          <p className="text-sm text-muted-foreground">{keyword.intent}</p>
+                        {keyword.serpFeatureSummary && (
+                          <p className="text-sm text-muted-foreground">{keyword.serpFeatureSummary}</p>
                         )}
                       </div>
                       <div className="text-right">
-                        {keyword.searchVolume !== null && (
-                          <p className="text-sm font-medium">{keyword.searchVolume} vol</p>
+                        {keyword.volume !== null && (
+                          <p className="text-sm font-medium">{keyword.volume} vol</p>
                         )}
                         {keyword.difficulty !== null && (
                           <p className="text-xs text-muted-foreground">Difficulty: {keyword.difficulty}</p>
@@ -208,8 +205,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                         </p>
                       </div>
                       <div className="text-right">
-                        {audit.score !== null && (
-                          <p className="text-lg font-bold">{audit.score}/100</p>
+                        {audit.overallScore !== null && (
+                          <p className="text-lg font-bold">{audit.overallScore}/100</p>
                         )}
                       </div>
                     </div>
@@ -240,8 +237,8 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
                     <div key={brief.id} className="flex items-center justify-between border-b pb-3 last:border-0">
                       <div>
                         <p className="font-medium">{brief.targetKeyword}</p>
-                        {brief.title && (
-                          <p className="text-sm text-muted-foreground">{brief.title}</p>
+                        {brief.searchIntent && (
+                          <p className="text-sm text-muted-foreground">{brief.searchIntent}</p>
                         )}
                       </div>
                       <div className="text-right">

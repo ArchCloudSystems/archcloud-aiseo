@@ -13,7 +13,6 @@ type Project = {
   id: string;
   name: string;
   domain: string | null;
-  plan: string;
   _count: {
     keywords: number;
     audits: number;
@@ -224,14 +223,9 @@ export function ProjectsClient({ initialProjects }: { initialProjects: Project[]
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between text-sm mb-2">
+                <div className="flex items-center justify-between text-sm mb-4">
                   <span className="text-muted-foreground">{project._count.keywords} keywords</span>
                   <span className="text-muted-foreground">{project._count.audits} audits</span>
-                </div>
-                <div className="mb-3">
-                  <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold">
-                    {project.plan}
-                  </span>
                 </div>
                 <Link href={`/projects/${project.id}`}>
                   <Button variant="outline" size="sm" className="w-full">

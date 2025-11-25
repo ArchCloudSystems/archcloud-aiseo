@@ -29,13 +29,17 @@ export async function generateContentBrief(params: {
   targetUrl?: string;
   notes?: string;
   model?: string;
+  apiKey?: string | null;
 }): Promise<ContentBriefData> {
-  if (!openai) {
+  const effectiveApiKey = params.apiKey || process.env.OPENAI_API_KEY;
+
+  if (!effectiveApiKey) {
     throw new Error(
-      "OpenAI API key is not configured. Please add OPENAI_API_KEY to your environment variables."
+      "OpenAI API not configured. Please add your OpenAI API key in Integrations."
     );
   }
 
+  const client = new OpenAI({ apiKey: effectiveApiKey });
   const {targetKeyword, targetUrl, notes, model = "gpt-4o-mini" } = params;
 
   const prompt = `You are an expert SEO content strategist. Create a detailed content brief for the following:
@@ -70,7 +74,7 @@ Focus on:
 
 Return ONLY valid JSON, no additional text.`;
 
-  const response = await openai.chat.completions.create({
+  const response = await client.chat.completions.create({
     model,
     messages: [
       {
@@ -98,18 +102,58 @@ Return ONLY valid JSON, no additional text.`;
   }
 }
 
+export async function generateText(
+  prompt: string,
+  model: string = "gpt-4o-mini",
+  apiKey?: string | null
+): Promise<string> {
+  const effectiveApiKey = apiKey || process.env.OPENAI_API_KEY;
+
+  if (!effectiveApiKey) {
+    throw new Error(
+      "OpenAI API not configured. Please add your OpenAI API key in Integrations."
+    );
+  }
+
+  const client = new OpenAI({ apiKey: effectiveApiKey });
+
+  const response = await client.chat.completions.create({
+    model,
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful assistant that generates professional, clear, and comprehensive text content.",
+      },
+      { role: "user", content: prompt },
+    ],
+    temperature: 0.7,
+    max_tokens: 3000,
+  });
+
+  const content = response.choices[0]?.message?.content;
+  if (!content) {
+    throw new Error("No response from OpenAI");
+  }
+
+  return content;
+}
+
 export async function enhanceSEORecommendations(params: {
   url: string;
   issues: Array<{ type: string; message: string }>;
   score: number;
   model?: string;
+  apiKey?: string | null;
 }): Promise<string[]> {
-  if (!openai) {
+  const effectiveApiKey = params.apiKey || process.env.OPENAI_API_KEY;
+
+  if (!effectiveApiKey) {
     return params.issues.map(
       (issue) => `Fix: ${issue.message}`
     );
   }
 
+  const client = new OpenAI({ apiKey: effectiveApiKey });
   const { url, issues, score, model = "gpt-4o-mini" } = params;
 
   const prompt = `As an SEO expert, provide 3-5 specific, actionable recommendations to improve this page:
@@ -127,7 +171,7 @@ Provide recommendations as a JSON array of strings. Each recommendation should b
 
 Return ONLY a JSON array of recommendation strings, no additional text.`;
 
-  const response = await openai.chat.completions.create({
+  const response = await client.chat.completions.create({
     model,
     messages: [
       {

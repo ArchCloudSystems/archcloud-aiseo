@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, FileText, Search, Sparkles, Check, TrendingUp, Zap, Target } from "lucide-react";
+import { BarChart3, FileText, Search, Sparkles, Check, TrendingUp, Zap, Target, Twitter, Linkedin, Instagram, Facebook, Youtube, Github } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 
 export default function LandingPage() {
@@ -372,25 +372,71 @@ export default function LandingPage() {
 
           <div className="mt-12 pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <p>&copy; {new Date().getFullYear()} {siteConfig.companyName}. All rights reserved.</p>
-            <div className="flex items-center gap-4">
-              {siteConfig.social.github && (
-                <Link
-                  href={siteConfig.social.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-primary transition-colors"
-                >
-                  GitHub
-                </Link>
-              )}
+            <div className="flex items-center gap-3">
               {siteConfig.social.twitter && (
                 <Link
                   href={siteConfig.social.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-primary transition-colors"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                  aria-label="Twitter"
                 >
-                  Twitter
+                  <Twitter className="h-4 w-4" />
+                </Link>
+              )}
+              {siteConfig.social.linkedin && (
+                <Link
+                  href={siteConfig.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-4 w-4" />
+                </Link>
+              )}
+              {siteConfig.social.instagram && (
+                <Link
+                  href={siteConfig.social.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-4 w-4" />
+                </Link>
+              )}
+              {siteConfig.social.facebook && (
+                <Link
+                  href={siteConfig.social.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-4 w-4" />
+                </Link>
+              )}
+              {siteConfig.social.youtube && (
+                <Link
+                  href={siteConfig.social.youtube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                  aria-label="YouTube"
+                >
+                  <Youtube className="h-4 w-4" />
+                </Link>
+              )}
+              {siteConfig.social.github && (
+                <Link
+                  href={siteConfig.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-9 w-9 items-center justify-center rounded-md border bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
+                  aria-label="GitHub"
+                >
+                  <Github className="h-4 w-4" />
                 </Link>
               )}
             </div>

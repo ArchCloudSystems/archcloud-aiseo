@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { BarChart3, FolderOpen, LayoutDashboard, Search, Settings, Sparkles, CreditCard, X } from "lucide-react";
+import { BarChart3, FolderOpen, LayoutDashboard, Search, Settings, Sparkles, CreditCard, X, FileText, Link2, Files } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -20,14 +20,29 @@ const routes = [
     href: "/projects",
   },
   {
-    label: "Keyword Research",
+    label: "Keywords",
     icon: Search,
     href: "/keywords",
   },
   {
-    label: "SEO Audits",
+    label: "Audits",
     icon: BarChart3,
     href: "/audits",
+  },
+  {
+    label: "Content Briefs",
+    icon: FileText,
+    href: "/content-briefs",
+  },
+  {
+    label: "Documents",
+    icon: Files,
+    href: "/documents",
+  },
+  {
+    label: "Integrations",
+    icon: Link2,
+    href: "/integrations",
   },
   {
     label: "Billing",

@@ -1,13 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-
-type IntegrationStatus = {
-  id: string;
-  name: string;
-  description: string;
-  status: "connected" | "missing" | "error";
-  configKey: string;
-};
+import { db } from "@/lib/db";
+import { getUserWorkspace } from "@/lib/workspace";
 
 export async function GET(request: Request) {
   try {
@@ -16,41 +10,37 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const integrations: IntegrationStatus[] = [
-      {
-        id: "stripe",
-        name: "Stripe",
-        description: "Payment processing and subscription management",
-        status: process.env.STRIPE_SECRET_KEY ? "connected" : "missing",
-        configKey: "STRIPE_SECRET_KEY",
-      },
-      {
-        id: "openai",
-        name: "OpenAI",
-        description: "AI-powered content brief generation",
-        status: process.env.OPENAI_API_KEY ? "connected" : "missing",
-        configKey: "OPENAI_API_KEY",
-      },
-      {
-        id: "serp_api",
-        name: "SERP API",
-        description: "Keyword research and search volume data",
-        status: process.env.SERP_API_KEY ? "connected" : "missing",
-        configKey: "SERP_API_KEY",
-      },
-      {
-        id: "ga4",
-        name: "Google Analytics 4",
-        description: "Website analytics and tracking",
-        status:
-          process.env.GA4_PROPERTY_ID &&
-          process.env.GA4_MEASUREMENT_ID &&
-          process.env.GA4_API_SECRET
-            ? "connected"
-            : "missing",
-        configKey: "GA4_PROPERTY_ID, GA4_MEASUREMENT_ID, GA4_API_SECRET",
-      },
-    ];
+    const INTEGRATION_TYPES = ["GA4", "GSC", "SERPAPI", "OPENAI", "STRIPE"];
+    const workspace = await getUserWorkspace(session.user.id);
+
+    let integrations = await db.integration.findMany({
+      where: { workspaceId: workspace.id },
+    });
+
+    for (const type of INTEGRATION_TYPES) {
+      const exists = integrations.find((i) => i.type === type);
+      if (!exists) {
+        const envVarMap: Record<string, string> = {
+          GA4: "GA4_API_KEY",
+          GSC: "GSC_API_KEY",
+          SERPAPI: "SERP_API_KEY",
+          OPENAI: "OPENAI_API_KEY",
+          STRIPE: "STRIPE_SECRET_KEY",
+        };
+
+        const envVar = envVarMap[type];
+        const isConfigured = process.env[envVar] ? true : false;
+
+        const integration = await db.integration.create({
+          data: {
+            workspaceId: workspace.id,
+            type,
+            status: isConfigured ? "CONNECTED" : "DISCONNECTED",
+          },
+        });
+        integrations.push(integration);
+      }
+    }
 
     return NextResponse.json({ integrations });
   } catch (error) {

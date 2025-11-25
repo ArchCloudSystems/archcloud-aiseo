@@ -6,6 +6,9 @@ import { getUserPlan } from "@/lib/plan-helper";
 import { getLimitsForPlan, checkLimit } from "@/lib/limits";
 import { analyzeSEO } from "@/lib/seo-analyzer";
 import { enhanceSEORecommendations } from "@/lib/openai";
+import { getUserWorkspace } from "@/lib/workspace";
+import { runPageSpeedAudit } from "@/lib/pagespeed-api";
+import { getOrFallbackPageSpeedKey, getOrFallbackOpenAIKey } from "@/lib/integration-helper";
 
 const createAuditSchema = z.object({
   projectId: z.string().min(1),
@@ -22,9 +25,12 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId");
+    const workspace = await getUserWorkspace(session.user.id);
 
     const where: any = {
-      userId: session.user.id,
+      project: {
+        workspaceId: workspace.id,
+      },
     };
 
     if (projectId) {
@@ -67,6 +73,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validatedData = createAuditSchema.parse(body);
 
+    const workspace = await getUserWorkspace(session.user.id);
     const plan = await getUserPlan(session.user.id);
     const limits = getLimitsForPlan(plan);
 
@@ -75,7 +82,9 @@ export async function POST(request: Request) {
 
     const recentAuditCount = await db.seoAudit.count({
       where: {
-        userId: session.user.id,
+        project: {
+          workspaceId: workspace.id,
+        },
         createdAt: {
           gte: oneWeekAgo,
         },
@@ -99,29 +108,42 @@ export async function POST(request: Request) {
       );
     }
 
-    const analysis = await analyzeSEO(validatedData.url);
+    const pageSpeedKey = await getOrFallbackPageSpeedKey(workspace.id);
+    const openaiKey = await getOrFallbackOpenAIKey(workspace.id);
+
+    const [analysis, pageSpeedResult] = await Promise.all([
+      analyzeSEO(validatedData.url),
+      runPageSpeedAudit(validatedData.url, pageSpeedKey),
+    ]);
 
     const recommendations = await enhanceSEORecommendations({
       url: validatedData.url,
       issues: analysis.issues,
       score: analysis.score,
       model: limits.openAIModel,
+      apiKey: openaiKey,
     });
+
+    const combinedIssues = [...analysis.issues, ...pageSpeedResult.issues];
+    const avgScore = Math.round((analysis.score + (pageSpeedResult.performanceScore || 0)) / 2);
 
     const audit = await db.seoAudit.create({
       data: {
-        userId: session.user.id,
         projectId: validatedData.projectId,
         url: validatedData.url,
-        keyword: validatedData.keyword,
-        score: analysis.score,
-        statusCode: analysis.statusCode,
+        overallScore: avgScore,
+        seoScore: pageSpeedResult.seoScore,
+        performanceScore: pageSpeedResult.performanceScore,
+        accessibilityScore: pageSpeedResult.accessibilityScore,
+        bestPracticesScore: pageSpeedResult.bestPracticesScore,
+        mobileFriendly: pageSpeedResult.mobileFriendly,
         title: analysis.title,
         metaDescription: analysis.metaDescription,
         h1Count: analysis.h1Count,
+        h2Count: 0,
         wordCount: analysis.wordCount,
-        issuesJson: JSON.stringify(analysis.issues),
-        recommendationsJson: JSON.stringify(recommendations),
+        loadTime: pageSpeedResult.loadTime,
+        issuesJson: JSON.stringify({ issues: combinedIssues, recommendations }),
       },
       include: {
         project: {

@@ -6,6 +6,8 @@ import { getUserPlan } from "@/lib/plan-helper";
 import { getLimitsForPlan, checkLimit } from "@/lib/limits";
 import { fetchKeywordMetrics } from "@/lib/serp-api";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { getUserWorkspace } from "@/lib/workspace";
+import { getOrFallbackSERPAPIKey } from "@/lib/integration-helper";
 
 const createKeywordSchema = z.object({
   projectId: z.string().min(1),
@@ -21,10 +23,11 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId");
+    const workspace = await getUserWorkspace(session.user.id);
 
     const where: any = {
       project: {
-        ownerId: session.user.id,
+        workspaceId: workspace.id,
       },
     };
 
@@ -79,10 +82,12 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validatedData = createKeywordSchema.parse(body);
 
+    const workspace = await getUserWorkspace(session.user.id);
+
     const project = await db.project.findFirst({
       where: {
         id: validatedData.projectId,
-        ownerId: session.user.id,
+        workspaceId: workspace.id,
       },
       include: {
         _count: {
@@ -116,7 +121,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const metrics = await fetchKeywordMetrics(validatedData.terms);
+    const serpApiKey = await getOrFallbackSERPAPIKey(workspace.id);
+
+    if (!serpApiKey) {
+      return NextResponse.json(
+        { error: "SERP API not configured. Please add your SERP API key in Integrations." },
+        { status: 400 }
+      );
+    }
+
+    const metrics = await fetchKeywordMetrics(validatedData.terms, serpApiKey);
 
     const keywords = await Promise.all(
       metrics.map((metric) =>
@@ -124,9 +138,10 @@ export async function POST(request: Request) {
           data: {
             projectId: validatedData.projectId,
             term: metric.term,
-            searchVolume: metric.searchVolume,
+            volume: metric.searchVolume,
             difficulty: metric.difficulty,
-            intent: metric.intent,
+            cpc: metric.cpc,
+            serpFeatureSummary: metric.intent,
           },
           include: {
             project: {

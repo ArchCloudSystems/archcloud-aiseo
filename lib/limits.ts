@@ -11,7 +11,7 @@ export type PlanLimits = {
 
 export function getLimitsForPlan(plan: PlanTier): PlanLimits {
   switch (plan) {
-    case "FREE":
+    case "STARTER":
       return {
         maxProjects: 2,
         maxKeywordsPerProject: 10,
@@ -39,7 +39,7 @@ export function getLimitsForPlan(plan: PlanTier): PlanLimits {
         openAIModel: "gpt-4o",
       };
     default:
-      return getLimitsForPlan("FREE");
+      return getLimitsForPlan("STARTER");
   }
 }
 

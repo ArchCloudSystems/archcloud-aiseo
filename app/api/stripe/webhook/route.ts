@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Stripe from "stripe";
 import { stripe, getPlanFromPriceId } from "@/lib/stripe";
 import { db } from "@/lib/db";
+import { getOrCreateUserWorkspace } from "@/lib/workspace";
 
 export async function POST(req: Request) {
   if (!stripe) {
@@ -64,10 +65,12 @@ export async function POST(req: Request) {
           const stripeSubResponse = await stripe.subscriptions.retrieve(subscriptionId);
           const sub = stripeSubResponse as unknown as Stripe.Subscription;
           const priceId = sub.items.data[0]?.price.id;
-          const plan = priceId ? getPlanFromPriceId(priceId) : "FREE";
+          const plan = priceId ? getPlanFromPriceId(priceId) : "STARTER";
+
+          const workspace = await getOrCreateUserWorkspace(userId);
 
           const existingSub = await db.subscription.findFirst({
-            where: { userId },
+            where: { workspaceId: workspace.id },
           });
 
           if (existingSub) {
@@ -87,7 +90,7 @@ export async function POST(req: Request) {
           } else {
             await db.subscription.create({
               data: {
-                userId,
+                workspaceId: workspace.id,
                 stripeCustomerId: customerId,
                 stripeSubscriptionId: subscriptionId,
                 stripePriceId: priceId,
@@ -100,10 +103,6 @@ export async function POST(req: Request) {
             });
           }
 
-          await db.project.updateMany({
-            where: { ownerId: userId },
-            data: { plan },
-          });
         }
         break;
       }
@@ -113,7 +112,7 @@ export async function POST(req: Request) {
         const subscription = event.data.object as Stripe.Subscription;
         const customerId = subscription.customer as string;
         const priceId = subscription.items.data[0]?.price.id;
-        const plan = priceId ? getPlanFromPriceId(priceId) : "FREE";
+        const plan = priceId ? getPlanFromPriceId(priceId) : "STARTER";
 
         const existingSubscription = await db.subscription.findFirst({
           where: { stripeCustomerId: customerId },
@@ -133,10 +132,6 @@ export async function POST(req: Request) {
             },
           });
 
-          await db.project.updateMany({
-            where: { ownerId: existingSubscription.userId },
-            data: { plan },
-          });
         }
         break;
       }
@@ -153,16 +148,12 @@ export async function POST(req: Request) {
           await db.subscription.update({
             where: { id: existingSubscription.id },
             data: {
-              plan: "FREE",
+              plan: "STARTER",
               status: "canceled",
               cancelAtPeriodEnd: false,
             },
           });
 
-          await db.project.updateMany({
-            where: { ownerId: existingSubscription.userId },
-            data: { plan: "FREE" },
-          });
         }
         break;
       }
