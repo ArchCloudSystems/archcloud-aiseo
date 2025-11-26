@@ -4,47 +4,47 @@
   --font-sans: var(--font-inter);
 
   --color-background: 0 0% 100%;
-  --color-foreground: 240 10% 3.9%;
+  --color-foreground: 222 47% 11%;
   --color-card: 0 0% 100%;
-  --color-card-foreground: 240 10% 3.9%;
+  --color-card-foreground: 222 47% 11%;
   --color-popover: 0 0% 100%;
-  --color-popover-foreground: 240 10% 3.9%;
-  --color-primary: 240 5.9% 10%;
-  --color-primary-foreground: 0 0% 98%;
-  --color-secondary: 240 4.8% 95.9%;
-  --color-secondary-foreground: 240 5.9% 10%;
-  --color-muted: 240 4.8% 95.9%;
-  --color-muted-foreground: 240 3.8% 46.1%;
-  --color-accent: 240 4.8% 95.9%;
-  --color-accent-foreground: 240 5.9% 10%;
-  --color-destructive: 0 84.2% 60.2%;
+  --color-popover-foreground: 222 47% 11%;
+  --color-primary: 217 91% 60%;
+  --color-primary-foreground: 0 0% 100%;
+  --color-secondary: 210 40% 96%;
+  --color-secondary-foreground: 222 47% 11%;
+  --color-muted: 210 40% 96%;
+  --color-muted-foreground: 215 16% 47%;
+  --color-accent: 210 40% 96%;
+  --color-accent-foreground: 222 47% 11%;
+  --color-destructive: 0 84% 60%;
   --color-destructive-foreground: 0 0% 98%;
-  --color-border: 240 5.9% 90%;
-  --color-input: 240 5.9% 90%;
-  --color-ring: 240 5.9% 10%;
+  --color-border: 214 32% 91%;
+  --color-input: 214 32% 91%;
+  --color-ring: 217 91% 60%;
   --radius: 0.5rem;
 }
 
 .dark {
-  --color-background: 240 10% 3.9%;
-  --color-foreground: 0 0% 98%;
-  --color-card: 240 10% 3.9%;
-  --color-card-foreground: 0 0% 98%;
-  --color-popover: 240 10% 3.9%;
-  --color-popover-foreground: 0 0% 98%;
-  --color-primary: 0 0% 98%;
-  --color-primary-foreground: 240 5.9% 10%;
-  --color-secondary: 240 3.7% 15.9%;
-  --color-secondary-foreground: 0 0% 98%;
-  --color-muted: 240 3.7% 15.9%;
-  --color-muted-foreground: 240 5% 64.9%;
-  --color-accent: 240 3.7% 15.9%;
-  --color-accent-foreground: 0 0% 98%;
-  --color-destructive: 0 62.8% 30.6%;
-  --color-destructive-foreground: 0 0% 98%;
-  --color-border: 240 3.7% 15.9%;
-  --color-input: 240 3.7% 15.9%;
-  --color-ring: 240 4.9% 83.9%;
+  --color-background: 222 47% 11%;
+  --color-foreground: 210 40% 98%;
+  --color-card: 222 47% 14%;
+  --color-card-foreground: 210 40% 98%;
+  --color-popover: 222 47% 14%;
+  --color-popover-foreground: 210 40% 98%;
+  --color-primary: 217 91% 60%;
+  --color-primary-foreground: 222 47% 11%;
+  --color-secondary: 217 33% 17%;
+  --color-secondary-foreground: 210 40% 98%;
+  --color-muted: 217 33% 17%;
+  --color-muted-foreground: 215 20% 65%;
+  --color-accent: 217 33% 17%;
+  --color-accent-foreground: 210 40% 98%;
+  --color-destructive: 0 63% 31%;
+  --color-destructive-foreground: 210 40% 98%;
+  --color-border: 217 33% 17%;
+  --color-input: 217 33% 17%;
+  --color-ring: 224 76% 48%;
 }
 
 * {
@@ -54,4 +54,69 @@
 body {
   background-color: hsl(var(--color-background));
   color: hsl(var(--color-foreground));
+  line-height: 1.5;
+}
+
+@media print {
+  @page {
+    margin: 1cm;
+  }
+
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  nav,
+  aside,
+  header,
+  footer,
+  .no-print,
+  button,
+  [role="dialog"],
+  [role="navigation"] {
+    display: none !important;
+  }
+
+  .dark {
+    --color-background: 0 0% 100%;
+    --color-foreground: 0 0% 0%;
+    --color-card: 0 0% 100%;
+    --color-card-foreground: 0 0% 0%;
+    --color-border: 0 0% 80%;
+  }
+
+  .card,
+  table {
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    color: black !important;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ddd !important;
+    padding: 8px !important;
+    color: black !important;
+  }
+
+  th {
+    background-color: #f5f5f5 !important;
+  }
+
+  a {
+    text-decoration: underline;
+    color: black !important;
+  }
+
+  .badge {
+    border: 1px solid #333 !important;
+  }
 }

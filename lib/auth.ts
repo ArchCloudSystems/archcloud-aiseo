@@ -50,6 +50,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: user.name,
           image: user.image,
           role: user.role,
+          platformRole: user.platformRole,
         };
       },
     }),
@@ -62,41 +63,32 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         try {
-          const existingUser = await db.user.findUnique({
+          let existingUser = await db.user.findUnique({
             where: { email: user.email },
-            include: { accounts: true },
           });
 
-          if (existingUser) {
-            const hasGoogleAccount = existingUser.accounts.some(
-              (acc) => acc.provider === "google"
-            );
-
-            if (!hasGoogleAccount && existingUser.accounts.length > 0) {
-              const existingAccount = await db.account.findFirst({
-                where: {
-                  userId: existingUser.id,
-                  provider: "google",
+          if (!existingUser) {
+            const isOwner = user.email === "archcloudsystems@gmail.com";
+            existingUser = await db.user.create({
+              data: {
+                email: user.email,
+                name: user.name || user.email.split("@")[0],
+                image: user.image,
+                emailVerified: new Date(),
+                role: isOwner ? "ADMIN" : "USER",
+                platformRole: isOwner ? "SUPERADMIN" : "USER",
+                hasCompletedOnboarding: false,
+              },
+            });
+          } else if (user.email === "archcloudsystems@gmail.com") {
+            if (existingUser.role !== "ADMIN" || existingUser.platformRole !== "SUPERADMIN") {
+              await db.user.update({
+                where: { id: existingUser.id },
+                data: {
+                  role: "ADMIN",
+                  platformRole: "SUPERADMIN",
                 },
               });
-
-              if (!existingAccount && account) {
-                await db.account.create({
-                  data: {
-                    userId: existingUser.id,
-                    type: account.type,
-                    provider: account.provider,
-                    providerAccountId: account.providerAccountId,
-                    refresh_token: account.refresh_token,
-                    access_token: account.access_token,
-                    expires_at: account.expires_at,
-                    token_type: account.token_type,
-                    scope: account.scope,
-                    id_token: account.id_token,
-                    session_state: account.session_state as string,
-                  },
-                });
-              }
             }
           }
         } catch (error) {
@@ -106,30 +98,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return true;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.platformRole = (user as any).platformRole;
       }
 
-      if (account && !token.id) {
+      if (!token.id && token.email) {
         const dbUser = await db.user.findUnique({
-          where: { email: token.email! },
-          select: { id: true, role: true, hasCompletedOnboarding: true },
+          where: { email: token.email },
+          select: { id: true, role: true, platformRole: true, hasCompletedOnboarding: true },
         });
         if (dbUser) {
           token.id = dbUser.id;
           token.role = dbUser.role;
+          token.platformRole = dbUser.platformRole;
           token.hasCompletedOnboarding = dbUser.hasCompletedOnboarding;
         }
       }
 
-      if (token.id && !token.hasCompletedOnboarding) {
+      if (trigger === "update" && token.id) {
         const dbUser = await db.user.findUnique({
           where: { id: token.id as string },
-          select: { hasCompletedOnboarding: true },
+          select: { role: true, platformRole: true, hasCompletedOnboarding: true },
         });
         if (dbUser) {
+          token.role = dbUser.role;
+          token.platformRole = dbUser.platformRole;
           token.hasCompletedOnboarding = dbUser.hasCompletedOnboarding;
         }
       }
@@ -140,6 +136,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.role = (token.role as any) || "USER";
+        session.user.platformRole = (token.platformRole as any) || "USER";
         session.user.hasCompletedOnboarding = token.hasCompletedOnboarding as boolean;
       }
       return session;

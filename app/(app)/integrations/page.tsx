@@ -54,6 +54,22 @@ const INTEGRATION_INFO = {
       { name: "apiKey", label: "API Key", type: "password", placeholder: "sk-..." },
     ],
   },
+  ANTHROPIC: {
+    name: "Anthropic Claude",
+    description: "Advanced AI for content generation and analysis.",
+    icon: "🧠",
+    fields: [
+      { name: "apiKey", label: "API Key", type: "password", placeholder: "sk-ant-..." },
+    ],
+  },
+  GEMINI: {
+    name: "Google Gemini",
+    description: "Google's multimodal AI for content and analysis.",
+    icon: "✨",
+    fields: [
+      { name: "apiKey", label: "API Key", type: "password", placeholder: "Your Gemini API key" },
+    ],
+  },
   STRIPE: {
     name: "Stripe",
     description: "Payment processing for subscription management.",

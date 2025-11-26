@@ -3,8 +3,9 @@ import { db } from "@/lib/db";
 import { getUserWorkspace } from "@/lib/workspace";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BarChart3, FileText, FolderOpen, Search, Plus, ArrowRight, CheckCircle2 } from "lucide-react";
+import { BarChart3, FileText, FolderOpen, Search, Plus, ArrowRight, CheckCircle2, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import { AuditChart } from "@/components/audit-chart";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -59,6 +60,30 @@ export default async function DashboardPage() {
     },
     take: 5,
   });
+
+  const recentAudits = await db.seoAudit.findMany({
+    where: {
+      project: {
+        workspaceId: workspace.id,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 30,
+    select: {
+      overallScore: true,
+      createdAt: true,
+    },
+  });
+
+  const auditChartData = recentAudits
+    .reverse()
+    .map((audit, i) => ({
+      name: `Audit ${i + 1}`,
+      score: audit.overallScore || 0,
+      date: new Date(audit.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    }));
 
   const hasStarted = projectCount > 0;
 
@@ -184,6 +209,18 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
+        {auditChartData.length > 0 && (
+          <Card className="col-span-2">
+            <CardHeader>
+              <CardTitle>Audit Score Trend</CardTitle>
+              <CardDescription>SEO audit performance over time</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AuditChart data={auditChartData} />
+            </CardContent>
+          </Card>
+        )}
+
         <Card>
           <CardHeader>
             <CardTitle>Recent Projects</CardTitle>

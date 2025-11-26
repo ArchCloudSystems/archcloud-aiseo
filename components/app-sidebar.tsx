@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { BarChart3, FolderOpen, LayoutDashboard, Search, Settings, Sparkles, CreditCard, X, FileText, Link2, Files } from "lucide-react";
+import { BarChart3, FolderOpen, LayoutDashboard, Search, Settings, Sparkles, CreditCard, X, FileText, Link2, Files, Shield } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 
 const routes = [
   {
@@ -59,6 +60,11 @@ const routes = [
 export function AppSidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: session } = useSession();
+
+  const userRole = session?.user?.role;
+  const platformRole = (session?.user as any)?.platformRole;
+  const isAdmin = userRole === "ADMIN" || platformRole === "SUPERADMIN";
 
   return (
     <>
@@ -98,6 +104,29 @@ export function AppSidebar() {
               {route.label}
             </Link>
           ))}
+
+          {isAdmin && (
+            <>
+              <div className="my-4 border-t pt-4">
+                <p className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                  Admin
+                </p>
+              </div>
+              <Link
+                href="/admin"
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+                  pathname === "/admin"
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground"
+                )}
+              >
+                <Shield className="h-5 w-5" />
+                System Admin
+              </Link>
+            </>
+          )}
         </nav>
       </aside>
 

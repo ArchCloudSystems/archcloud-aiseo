@@ -1,10 +1,41 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { auth } from "./lib/auth";
 
-// Simple middleware that just lets requests through.
-// We are intentionally NOT using Auth.js or Prisma here
-// because Edge runtime cannot use Prisma Client.
-export function middleware(_req: NextRequest) {
+export async function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
+
+  if (pathname.startsWith("/admin")) {
+    const session = await auth();
+
+    if (!session?.user) {
+      return NextResponse.redirect(new URL("/auth/signin", req.url));
+    }
+
+    const userRole = (session.user as any).role;
+    const platformRole = (session.user as any).platformRole;
+
+    if (userRole !== "ADMIN" && platformRole !== "SUPERADMIN") {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+  }
+
+  if (pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/projects") ||
+      pathname.startsWith("/keywords") ||
+      pathname.startsWith("/audits") ||
+      pathname.startsWith("/content-briefs") ||
+      pathname.startsWith("/documents") ||
+      pathname.startsWith("/integrations") ||
+      pathname.startsWith("/billing") ||
+      pathname.startsWith("/settings")) {
+    const session = await auth();
+
+    if (!session?.user) {
+      return NextResponse.redirect(new URL("/auth/signin", req.url));
+    }
+  }
+
   return NextResponse.next();
 }
 
@@ -22,4 +53,3 @@ export const config = {
     "/admin/:path*",
   ],
 };
-

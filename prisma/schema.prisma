@@ -52,8 +52,23 @@ enum IntegrationType {
   GSC
   SERP_API
   OPENAI
+  ANTHROPIC
+  GEMINI
   STRIPE
   PAGESPEED
+  WORDPRESS
+  WIX
+}
+
+enum ConnectedSiteType {
+  WORDPRESS
+  WIX
+}
+
+enum ConnectedSiteStatus {
+  CONNECTED
+  ERROR
+  DISCONNECTED
 }
 
 enum TelemetryEventType {
@@ -149,6 +164,7 @@ model Workspace {
   documents             Document[]
   integrations          Integration[]
   integrationConfigs    IntegrationConfig[]
+  connectedSites        ConnectedSite[]
   subscription          Subscription?
   telemetryEvents       TelemetryEvent[]
   dailyUsageSnapshots   DailyUsageSnapshot[]
@@ -222,12 +238,13 @@ model Project {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  workspace     Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  client        Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
-  keywords      Keyword[]
-  audits        SeoAudit[]
-  contentBriefs ContentBrief[]
-  documents     Document[]
+  workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  client         Client?         @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  keywords       Keyword[]
+  audits         SeoAudit[]
+  contentBriefs  ContentBrief[]
+  documents      Document[]
+  connectedSites ConnectedSite[]
 
   @@index([workspaceId])
   @@index([clientId])
@@ -251,10 +268,34 @@ model Keyword {
   @@index([projectId])
 }
 
+// Connected Sites (WordPress, Wix, etc.)
+model ConnectedSite {
+  id             String              @id @default(cuid())
+  workspaceId    String
+  projectId      String?
+  type           ConnectedSiteType
+  name           String
+  url            String
+  status         ConnectedSiteStatus @default(DISCONNECTED)
+  lastSyncAt     DateTime?
+  lastSyncStatus String?
+  meta           String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  workspace Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project   Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  audits    SeoAudit[]
+
+  @@index([workspaceId])
+  @@index([projectId])
+}
+
 // SEO Audits
 model SeoAudit {
   id                 String   @id @default(cuid())
   projectId          String
+  connectedSiteId    String?
   url                String
   overallScore       Int?
   performanceScore   Int?
@@ -272,9 +313,11 @@ model SeoAudit {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  project        Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  connectedSite  ConnectedSite? @relation(fields: [connectedSiteId], references: [id], onDelete: SetNull)
 
   @@index([projectId])
+  @@index([connectedSiteId])
 }
 
 // Content Briefs

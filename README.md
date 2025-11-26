@@ -4,6 +4,16 @@
 
 A production-ready SaaS application for SEO professionals, digital agencies, and content marketers. Built with modern web technologies and best practices, featuring keyword research, content optimization, on-page auditing, and AI-driven insights.
 
+**Latest Updates (November 2025):**
+- Multi-LLM support (OpenAI, Anthropic, Gemini) with BYOK
+- WordPress & Wix site connection management
+- Enhanced RBAC with platform and workspace roles
+- Improved admin dashboard with role-based access
+- Professional dark theme with print optimization
+- Connected site auditing infrastructure
+
+For detailed implementation notes, see [IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md).
+
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
 ![Prisma](https://img.shields.io/badge/Prisma-6-2D3748?logo=prisma)
