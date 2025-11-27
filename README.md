@@ -5,14 +5,20 @@
 A production-ready SaaS application for SEO professionals, digital agencies, and content marketers. Built with modern web technologies and best practices, featuring keyword research, content optimization, on-page auditing, and AI-driven insights.
 
 **Latest Updates (November 2025):**
+- ✅ **Production-ready:** Fully stabilized for VPS deployment
+- ✅ **Node.js runtime:** All Prisma/auth routes fixed (no edge runtime errors)
+- ✅ **Documents API:** Complete CRUD + template generation working
 - Multi-LLM support (OpenAI, Anthropic, Gemini) with BYOK
 - WordPress & Wix site connection management
 - Enhanced RBAC with platform and workspace roles
 - Improved admin dashboard with role-based access
 - Professional dark theme with print optimization
-- Connected site auditing infrastructure
 
-For detailed implementation notes, see [IMPLEMENTATION_SUMMARY.md](./IMPLEMENTATION_SUMMARY.md).
+**📚 Documentation:**
+- [Production Deployment Guide](./PRODUCTION_DEPLOYMENT.md) - Complete VPS setup guide
+- [QA Checklist](./QA_CHECKLIST.md) - Manual testing procedures
+- [Changes Summary](./CHANGES_SUMMARY.md) - Latest fixes and improvements
+- [Implementation Summary](./IMPLEMENTATION_SUMMARY.md) - Architecture details
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
@@ -241,6 +247,44 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ```bash
 npm run build
+npm start
+```
+
+## Production Deployment
+
+For production deployment on a VPS with PostgreSQL, Nginx, and PM2, see our comprehensive guide:
+
+**[📖 Production Deployment Guide](./PRODUCTION_DEPLOYMENT.md)**
+
+This guide covers:
+- Complete VPS setup (Ubuntu + PostgreSQL + Nginx + PM2)
+- Environment configuration for production
+- Database migrations and setup
+- SSL certificate installation with Let's Encrypt
+- Process management with PM2
+- Backup automation
+- Monitoring and logging
+- Troubleshooting common issues
+
+**Quick Production Setup:**
+
+```bash
+# 1. Install dependencies
+pnpm install
+
+# 2. Configure environment
+cp .env.example .env
+# Edit .env with production values
+
+# 3. Run migrations
+pnpm prisma migrate deploy
+
+# 4. Build application
+pnpm build
+
+# 5. Start with PM2
+pm2 start ecosystem.config.js
+pm2 save
 npm run start
 ```
 

@@ -1,0 +1,748 @@
+{
+  "links": [
+    {
+      "url": "https://aiseo.archcloudsystems.com/",
+      "status": 200,
+      "state": "OK",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a0e061755ead5df.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/ff1a16fafef87110.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/9ec3735714e46c90.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/06525dfb60487280.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/turbopack-c35232d329ec43ff.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/auth/signin",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a597947e94341ba.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/d087f70dd3d69b11.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/796e69ae18b2784c.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/auth/signup",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a0e061755ead5df.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/9ec3735714e46c90.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/d087f70dd3d69b11.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/06525dfb60487280.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/turbopack-c35232d329ec43ff.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a597947e94341ba.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/ff1a16fafef87110.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/contact",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/247eb132b7f7b574.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/247eb132b7f7b574.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a6dad97d9634a72d.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a6dad97d9634a72d.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6740f161f60c6ab5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6740f161f60c6ab5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/auth/signup",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a0e061755ead5df.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/9ec3735714e46c90.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/d087f70dd3d69b11.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6740f161f60c6ab5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/06525dfb60487280.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/turbopack-c35232d329ec43ff.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a597947e94341ba.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/ff1a16fafef87110.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/247eb132b7f7b574.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a6dad97d9634a72d.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/auth/signin",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a0e061755ead5df.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/9ec3735714e46c90.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/d087f70dd3d69b11.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6740f161f60c6ab5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/06525dfb60487280.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/turbopack-c35232d329ec43ff.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a597947e94341ba.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/ff1a16fafef87110.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/247eb132b7f7b574.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a6dad97d9634a72d.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/support",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "https://aiseo.archcloudsystems.com/"
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/blog",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "https://aiseo.archcloudsystems.com/"
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a0e061755ead5df.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/support",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/9ec3735714e46c90.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/support",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/d087f70dd3d69b11.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/support",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6740f161f60c6ab5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/support",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/06525dfb60487280.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/support",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/turbopack-c35232d329ec43ff.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/support",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/247eb132b7f7b574.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/support",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a6dad97d9634a72d.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/support",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a0e061755ead5df.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/blog",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/9ec3735714e46c90.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/blog",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/d087f70dd3d69b11.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/blog",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6740f161f60c6ab5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/blog",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/06525dfb60487280.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/blog",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/turbopack-c35232d329ec43ff.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/blog",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/247eb132b7f7b574.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/blog",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a6dad97d9634a72d.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/blog",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/privacy",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "https://aiseo.archcloudsystems.com/"
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/terms",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "https://aiseo.archcloudsystems.com/"
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a0e061755ead5df.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/privacy",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/9ec3735714e46c90.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/privacy",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/d087f70dd3d69b11.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/privacy",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6740f161f60c6ab5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/privacy",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/06525dfb60487280.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/privacy",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/turbopack-c35232d329ec43ff.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/privacy",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/247eb132b7f7b574.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/privacy",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a6dad97d9634a72d.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/privacy",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a0e061755ead5df.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/terms",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/9ec3735714e46c90.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/terms",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/d087f70dd3d69b11.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/terms",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6740f161f60c6ab5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/terms",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/06525dfb60487280.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/terms",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/turbopack-c35232d329ec43ff.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/terms",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/247eb132b7f7b574.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/terms",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a6dad97d9634a72d.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/terms",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "status": 404,
+      "state": "BROKEN",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin"
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/e8b415a4c4455109.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6a0e061755ead5df.css",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/9ec3735714e46c90.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/d087f70dd3d69b11.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/6740f161f60c6ab5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/06525dfb60487280.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/turbopack-c35232d329ec43ff.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/247eb132b7f7b574.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a6dad97d9634a72d.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/08bc45139bd50a49.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/7be46d842c489d66.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signin",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a070a464a266cbcd.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/contact",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/e809c48b886030a6.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/signup",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a3d6efd6048b61f5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/support",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a3d6efd6048b61f5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/blog",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a3d6efd6048b61f5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/privacy",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a3d6efd6048b61f5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/terms",
+      "failureDetails": []
+    },
+    {
+      "url": "https://aiseo.archcloudsystems.com/_next/static/chunks/a3d6efd6048b61f5.js",
+      "status": 200,
+      "state": "OK",
+      "parent": "https://aiseo.archcloudsystems.com/auth/forgot-password",
+      "failureDetails": []
+    }
+  ],
+  "passed": false
+}

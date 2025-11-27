@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { requireSuperAdmin, validateDashAppRequest } from "@/lib/admin-auth";
 import { db } from "@/lib/db";

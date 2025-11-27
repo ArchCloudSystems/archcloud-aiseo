@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth, requireWorkspaceAdmin } from "@/lib/rbac";
 import { db } from "@/lib/db";
@@ -72,7 +74,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const encryptedCredentials = encryptCredentials(credentials);
+    let encryptedCredentials: string;
+    try {
+      encryptedCredentials = encryptCredentials(credentials);
+    } catch (encryptError) {
+      return NextResponse.json(
+        { error: "Failed to encrypt credentials" },
+        { status: 500 }
+      );
+    }
 
     const config = await db.integrationConfig.create({
       data: {

@@ -1,0 +1,489 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Enums
+enum UserRole {
+  USER
+  ADMIN
+  SERVICE_ACCOUNT
+}
+
+enum PlatformRole {
+  USER
+  SUPERADMIN
+}
+
+enum OrgMemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum PlanTier {
+  STARTER
+  PRO
+  AGENCY
+}
+
+enum DocumentType {
+  NOTE
+  REPORT
+  UPLOAD
+  LEGAL
+  STRATEGY
+  RESEARCH
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  DISCONNECTED
+  ERROR
+}
+
+enum IntegrationType {
+  GA4
+  GSC
+  SERP_API
+  OPENAI
+  ANTHROPIC
+  GEMINI
+  STRIPE
+  PAGESPEED
+  WORDPRESS
+  WIX
+}
+
+enum ConnectedSiteType {
+  WORDPRESS
+  WIX
+}
+
+enum ConnectedSiteStatus {
+  CONNECTED
+  ERROR
+  DISCONNECTED
+}
+
+enum TelemetryEventType {
+  USER_LOGIN
+  USER_LOGOUT
+  PROJECT_CREATED
+  PROJECT_UPDATED
+  PROJECT_DELETED
+  KEYWORD_SEARCH
+  AUDIT_RUN
+  CONTENT_BRIEF_GENERATED
+  DOCUMENT_CREATED
+  INTEGRATION_CONNECTED
+  INTEGRATION_DISCONNECTED
+  ERROR_OCCURRED
+  API_CALL
+}
+
+// Core Auth Models (NextAuth + PrismaAdapter)
+model User {
+  id                     String        @id @default(cuid())
+  name                   String?
+  email                  String        @unique
+  emailVerified          DateTime?
+  image                  String?
+  passwordHash           String?
+  role                   UserRole      @default(USER)
+  platformRole           PlatformRole  @default(USER)
+  hasCompletedOnboarding Boolean       @default(false)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  accounts          Account[]
+  sessions          Session[]
+  workspaces        WorkspaceUser[]
+  ownedWorkspaces   Workspace[]       @relation("WorkspaceOwner")
+  telemetryEvents   TelemetryEvent[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Workspace & Multi-tenancy (Organization)
+model Workspace {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  website     String?
+  ownerId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner                 User                    @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  users                 WorkspaceUser[]
+  projects              Project[]
+  clients               Client[]
+  documents             Document[]
+  integrations          Integration[]
+  integrationConfigs    IntegrationConfig[]
+  connectedSites        ConnectedSite[]
+  subscription          Subscription?
+  telemetryEvents       TelemetryEvent[]
+  dailyUsageSnapshots   DailyUsageSnapshot[]
+  rateLimitLogs         RateLimitLog[]
+
+  @@index([ownerId])
+  @@index([slug])
+}
+
+model WorkspaceUser {
+  id          String        @id @default(cuid())
+  workspaceId String
+  userId      String
+  role        OrgMemberRole @default(MEMBER)
+  createdAt   DateTime      @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, userId])
+  @@index([workspaceId])
+  @@index([userId])
+}
+
+// Per-Tenant Integration Configs (with encrypted credentials)
+model IntegrationConfig {
+  id                   String          @id @default(cuid())
+  workspaceId          String
+  type                 IntegrationType
+  displayName          String?
+  isEnabled            Boolean         @default(true)
+  encryptedCredentials String
+  lastTestedAt         DateTime?
+  lastTestStatus       String?
+  lastTestError        String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, type])
+  @@index([workspaceId])
+}
+
+// Client Management
+model Client {
+  id            String   @id @default(cuid())
+  workspaceId   String
+  name          String
+  primaryDomain String?
+  contactEmail  String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  workspace Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  projects  Project[]
+  documents Document[]
+
+  @@index([workspaceId])
+}
+
+// Project Management
+model Project {
+  id          String   @id @default(cuid())
+  workspaceId String
+  clientId    String?
+  name        String
+  domain      String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  client         Client?         @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  keywords       Keyword[]
+  audits         SeoAudit[]
+  contentBriefs  ContentBrief[]
+  documents      Document[]
+  connectedSites ConnectedSite[]
+
+  @@index([workspaceId])
+  @@index([clientId])
+}
+
+// Keyword Research
+model Keyword {
+  id                 String   @id @default(cuid())
+  projectId          String
+  term               String
+  volume             Int?
+  difficulty         Int?
+  cpc                Float?
+  serpFeatureSummary String?
+  country            String   @default("us")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+// Connected Sites (WordPress, Wix, etc.)
+model ConnectedSite {
+  id             String              @id @default(cuid())
+  workspaceId    String
+  projectId      String?
+  type           ConnectedSiteType
+  name           String
+  url            String
+  status         ConnectedSiteStatus @default(DISCONNECTED)
+  lastSyncAt     DateTime?
+  lastSyncStatus String?
+  meta           String?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  workspace Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project   Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  audits    SeoAudit[]
+
+  @@index([workspaceId])
+  @@index([projectId])
+}
+
+// SEO Audits
+model SeoAudit {
+  id                 String   @id @default(cuid())
+  projectId          String
+  connectedSiteId    String?
+  url                String
+  overallScore       Int?
+  performanceScore   Int?
+  seoScore           Int?
+  accessibilityScore Int?
+  bestPracticesScore Int?
+  mobileFriendly     Boolean  @default(false)
+  title              String?
+  metaDescription    String?
+  h1Count            Int?
+  h2Count            Int?
+  wordCount          Int?
+  loadTime           Int?
+  issuesJson         String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  project        Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  connectedSite  ConnectedSite? @relation(fields: [connectedSiteId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+  @@index([connectedSiteId])
+}
+
+// Content Briefs
+model ContentBrief {
+  id              String   @id @default(cuid())
+  projectId       String
+  targetKeyword   String
+  searchIntent    String?
+  outline         String?
+  questions       String?
+  wordCountTarget Int?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+// Document Center
+model Document {
+  id          String       @id @default(cuid())
+  workspaceId String
+  clientId    String?
+  projectId   String?
+  title       String
+  type        DocumentType @default(NOTE)
+  content     String?
+  url         String?
+  tags        String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  client    Client?   @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  project   Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId])
+  @@index([clientId])
+  @@index([projectId])
+}
+
+// Legacy Integrations (for backward compatibility, will be migrated to IntegrationConfig)
+model Integration {
+  id            String            @id @default(cuid())
+  workspaceId   String
+  type          String
+  status        IntegrationStatus @default(DISCONNECTED)
+  lastCheckedAt DateTime?
+  details       String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, type])
+  @@index([workspaceId])
+}
+
+// Billing & Subscriptions
+model Subscription {
+  id                   String    @id @default(cuid())
+  workspaceId          String    @unique
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  stripePriceId        String?
+  plan                 PlanTier
+  status               String
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean?  @default(false)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+}
+
+// Service Accounts (for ArchCloud Dash)
+model ServiceAccount {
+  id          String   @id @default(cuid())
+  name        String
+  apiKey      String   @unique
+  permissions String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([apiKey])
+}
+
+// Admin Audit Logs (Super Admin Only)
+model AdminLog {
+  id          String   @id @default(cuid())
+  level       String
+  action      String
+  userId      String?
+  workspaceId String?
+  metadata    String?
+  ipAddress   String?
+  userAgent   String?
+  timestamp   DateTime @default(now())
+
+  @@index([userId])
+  @@index([workspaceId])
+  @@index([timestamp])
+  @@index([level])
+}
+
+// Rate Limiting (Postgres-backed)
+model RateLimitLog {
+  id          String    @id @default(cuid())
+  workspaceId String?
+  userId      String?
+  ip          String
+  route       String
+  method      String
+  status      Int?
+  createdAt   DateTime  @default(now())
+
+  workspace Workspace? @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, route, createdAt])
+  @@index([userId, route, createdAt])
+  @@index([ip, route, createdAt])
+  @@index([createdAt])
+}
+
+// Telemetry & Analytics
+model TelemetryEvent {
+  id          String              @id @default(cuid())
+  workspaceId String
+  userId      String?
+  type        TelemetryEventType
+  context     String?
+  metadata    String?
+  createdAt   DateTime            @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId])
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model DailyUsageSnapshot {
+  id                  String   @id @default(cuid())
+  workspaceId         String
+  date                DateTime @db.Date
+  loginCount          Int      @default(0)
+  projectCount        Int      @default(0)
+  keywordSearchCount  Int      @default(0)
+  auditRunCount       Int      @default(0)
+  contentBriefCount   Int      @default(0)
+  documentCount       Int      @default(0)
+  apiCallCount        Int      @default(0)
+  errorCount          Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, date])
+  @@index([workspaceId])
+  @@index([date])
+}
